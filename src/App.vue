@@ -1,11 +1,7 @@
-<script setup lang="ts">
-import SearchPokemon from "./components/SearchPokemon.vue";
-import SearchResults from "./components/SearchResults.vue";
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <SearchPokemon></SearchPokemon>
-  <SearchResults></SearchResults>
+  <router-view></router-view>
 </template>
 
 <style scoped lang="scss"></style>

@@ -1,11 +1,42 @@
 <script setup lang="ts">
+import { ref, Ref } from "vue";
 import { usePokemonStore } from "../store";
 import PokemonPreview from "./PokemonPreview.vue";
 
 const store = usePokemonStore();
+const prevBtnDisabled: Ref<boolean> = ref(true);
+const nextBtnDisabled: Ref<boolean> = ref(false);
+
+if (store.currentPage === 1) {
+  prevBtnDisabled.value = true;
+} else {
+  prevBtnDisabled.value = false;
+}
 
 if (!store.pokemons.length) {
-  store.getPokemons();
+  await store.getPokemons(store.currentPage);
+}
+
+async function goToPrevPage(): Promise<void> {
+  await store.getPokemons(--store.currentPage);
+
+  if (store.currentPage === 1) {
+    prevBtnDisabled.value = true;
+  }
+  updateSavedPage(store.currentPage);
+}
+
+async function goToNextPage(): Promise<void> {
+  await store.getPokemons(++store.currentPage);
+
+  if (store.currentPage > 1) {
+    prevBtnDisabled.value = false;
+  }
+  updateSavedPage(store.currentPage);
+}
+
+function updateSavedPage(newPage: number): void {
+  localStorage.setItem("page", newPage.toString());
 }
 
 function capitalizeFirstLetter(s: string): string {
@@ -18,21 +49,98 @@ function capitalizeFirstLetter(s: string): string {
     <PokemonPreview
       v-for="pokemon in store.pokemons"
       :imageSource="pokemon.image"
+      :id="pokemon.number"
     >
-      <template #pokemon-number>
-        {{ pokemon.url }}
-      </template>
+      <template #pokemon-number> #{{ pokemon.number }} </template>
       <template #pokemon-name>
         {{ capitalizeFirstLetter(pokemon.name) }}
       </template>
     </PokemonPreview>
   </div>
+
+  <div class="buttons">
+    <button
+      class="buttons__prev"
+      @click="goToPrevPage"
+      :disabled="prevBtnDisabled"
+    >
+      &lt;-
+    </button>
+    <button
+      class="buttons__next"
+      @click="goToNextPage"
+      :disabled="nextBtnDisabled"
+    >
+      -&gt;
+    </button>
+  </div>
 </template>
 
 <style lang="scss">
-.search-results {
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code&display=swap");
+
+.buttons {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 1rem;
+  user-select: none;
+
+  &__prev,
+  &__next {
+    font-family: "Fira Code", monospace;
+    background-color: indianred;
+    // color: #f5f5f5;
+    color: #fff;
+    font-size: 1.2rem;
+    border: none;
+    padding: 1rem;
+    border-radius: 1rem;
+    transition: all 0.2s ease-in-out;
+
+    @media (pointer: fine) {
+      filter: brightness(0.9);
+    }
+
+    &:disabled {
+      background-color: #cea0a0;
+    }
+
+    &:hover:enabled {
+      cursor: pointer;
+      filter: brightness(1);
+    }
+  }
+}
+.search-results {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1vw;
+  margin: 1rem 0;
+  transition: all 0.2s ease-in-out;
+  -webkit-tap-highlight-color: transparent;
+
+  @media screen and (min-width: 481px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media screen and (min-width: 769px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media screen and (min-width: 1025px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media screen and (min-width: 1650px) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  @media screen and (min-width: 1920px) {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  @media screen and (min-width: 2000px) {
+    grid-template-columns: repeat(7, 1fr);
+  }
 }
 </style>

@@ -1,8 +1,12 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+function submitEventHandler(e: Event): void {
+  e.preventDefault();
+}
+</script>
 
 <template>
   <div class="search-pokemon">
-    <form class="search-pokemon__form">
+    <form class="search-pokemon__form" @submit="submitEventHandler">
       <input type="text" class="search-pokemon__input" />
       <button class="btn search-pokemon__btn">
         <img
@@ -72,5 +76,6 @@
 
 .poke-ball-icon {
   height: 1.5rem;
+  user-select: none;
 }
 </style>

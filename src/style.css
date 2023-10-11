@@ -21,5 +21,22 @@ body {
 }
 
 #app {
-  padding: 1rem;
+  padding: 1rem 3vw;
+}
+
+::-webkit-scrollbar {
+  width: 0.5rem;
+}
+
+::-webkit-scrollbar-track {
+  background: #fff;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #9ad498;
+  border-radius: 1rem;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #729d70;
 }
