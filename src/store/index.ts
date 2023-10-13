@@ -13,10 +13,11 @@ export const usePokemonStore = defineStore("pokemons", () => {
   }
 
   async function getPokemons(page: number): Promise<void> {
-    // prevent negative "page" requests
     if (currentPage.value > 0) {
       const pokemonData = await getPokemonsData(page);
       pokemons.value = pokemonData;
+
+      localStorage.setItem("page", page.toString());
     }
   }
 

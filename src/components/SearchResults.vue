@@ -23,7 +23,6 @@ async function goToPrevPage(): Promise<void> {
   if (store.currentPage === 1) {
     prevBtnDisabled.value = true;
   }
-  updateSavedPage(store.currentPage);
 }
 
 async function goToNextPage(): Promise<void> {
@@ -32,11 +31,6 @@ async function goToNextPage(): Promise<void> {
   if (store.currentPage > 1) {
     prevBtnDisabled.value = false;
   }
-  updateSavedPage(store.currentPage);
-}
-
-function updateSavedPage(newPage: number): void {
-  localStorage.setItem("page", newPage.toString());
 }
 
 function capitalizeFirstLetter(s: string): string {
@@ -48,10 +42,11 @@ function capitalizeFirstLetter(s: string): string {
   <div class="search-results">
     <PokemonPreview
       v-for="pokemon in store.pokemons"
+      :key="pokemon.id"
       :imageSource="pokemon.image"
-      :id="pokemon.number"
+      :id="pokemon.id"
     >
-      <template #pokemon-number> #{{ pokemon.number }} </template>
+      <template #pokemon-number> #{{ pokemon.id }} </template>
       <template #pokemon-name>
         {{ capitalizeFirstLetter(pokemon.name) }}
       </template>

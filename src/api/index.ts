@@ -15,7 +15,7 @@ export async function getPokemonsData(
 
       return {
         url: pokemon.url,
-        number: pokemon.url.split("/")[6],
+        id: pokemon.url.split("/")[6],
         name: pokemonData.name,
         image: pokemonData.sprites.other["official-artwork"]["front_default"],
       };

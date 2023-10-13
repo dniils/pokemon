@@ -5,14 +5,14 @@ const route = useRoute();
 
 const store = usePokemonStore();
 const pokemonToDisplay = store.pokemons.find(
-  (pokemon) => pokemon.number === route.params.id
+  (pokemon) => pokemon.id === route.params.id
 );
 </script>
 
 <template>
   <h2>Here will be a detailed view for pokemon</h2>
   <ul>
-    <li>Number: {{ pokemonToDisplay?.number }}</li>
+    <li>Number: {{ pokemonToDisplay?.id }}</li>
     <li>Name: {{ pokemonToDisplay?.name }}</li>
     <li>
       Image:

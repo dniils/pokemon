@@ -21,3 +21,5 @@ const SearchResults = defineAsyncComponent(
     </template>
   </Suspense>
 </template>
+
+<style lang="scss" scoped></style>
