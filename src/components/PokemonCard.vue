@@ -16,8 +16,6 @@ const pokemonToDisplay = ref(
   store.pokemons.find((el) => el.name === route.params.name) as PokemonInterface
 );
 
-// console.log(pokemonToDisplay.value.name);
-
 const typeNames: string[] = pokemonToDisplay.value.types.map(
   (type) => type.type.name
 ); // ['normal', 'poison']
@@ -25,7 +23,9 @@ const typeNames: string[] = pokemonToDisplay.value.types.map(
 const pokemonColor: string =
   pokemonTypeColors[typeNames[0] as keyof PokemonTypeColorsI];
 
-console.log(pokemonColor);
+const maxPokemonStat = Math.max(
+  ...pokemonToDisplay.value.stats.map((stat) => stat.base_stat)
+);
 
 function toggleLike(): void {
   if (isLikeActive.value) {
@@ -90,13 +90,24 @@ function capitalizeFirstLetter(s: string): string {
           :alt="`${pokemonToDisplay.name} pokemon image`"
         />
       </div>
-      <h3>About</h3>
-      <ul>
-        <li>Species: <span>some info</span></li>
-        <li>Gender: <span>info</span></li>
-        <li>Height: <span>123</span></li>
-        <li>Weight: <span>76</span></li>
-      </ul>
+
+      <h3 class="info__stats-header">Stats</h3>
+      <div class="stat" v-for="stat in pokemonToDisplay.stats">
+        <div class="stat__name-and-base">
+          <span class="stat__name">{{ stat.stat.name }}</span>
+          <span class="stat__base"> {{ stat.base_stat }}</span>
+        </div>
+
+        <span class="stat__bar">
+          <span
+            class="stat__filler"
+            :style="{
+              width: `calc(100% - (${maxPokemonStat}% - ${stat.base_stat}%))`,
+              backgroundColor: pokemonColor,
+            }"
+          ></span>
+        </span>
+      </div>
     </section>
   </div>
 </template>
@@ -236,6 +247,50 @@ function capitalizeFirstLetter(s: string): string {
 
   &__image {
     max-width: 13rem;
+  }
+}
+
+.stat {
+  display: flex;
+  gap: 1rem;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0.5rem 0;
+
+  &__name-and-base {
+    min-width: 9rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  &__name {
+    color: gray;
+    min-width: 7rem;
+  }
+  &__base {
+    min-width: 1rem;
+  }
+
+  &__bar {
+    position: relative;
+    min-width: 6rem;
+    max-width: 10rem;
+    width: 100%;
+    height: 0.3rem;
+    border-radius: 1rem;
+    background-color: #e6e6e6;
+  }
+
+  &__filler {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    border-radius: 1rem;
+    background-color: #cdcdcd;
   }
 }
 

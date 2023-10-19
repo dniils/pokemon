@@ -22,6 +22,7 @@ if (!store.pokemons.length || store.pokemons.length <= 1) {
 
 function goToPrevPage(): void {
   store.getPokemons(--store.currentPage);
+  // router.push("/");
 
   if (store.currentPage === 1) {
     prevBtnDisabled.value = true;
@@ -30,6 +31,7 @@ function goToPrevPage(): void {
 
 function goToNextPage(): void {
   store.getPokemons(++store.currentPage);
+  // router.push("/");
 
   if (store.currentPage > 1) {
     prevBtnDisabled.value = false;

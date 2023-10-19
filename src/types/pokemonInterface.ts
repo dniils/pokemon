@@ -16,10 +16,20 @@ type Type = {
   };
 };
 
+type Stat = {
+  base_stat: number;
+  effort: number;
+  stat: {
+    name: string;
+    url: string;
+  };
+};
+
 export interface PokemonInterface {
   id: number;
   url: string;
   name: string;
   sprites: Sprite;
   types: Type[];
+  stats: Stat[];
 }
