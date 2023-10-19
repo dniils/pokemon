@@ -2,10 +2,13 @@
 import { ref, Ref } from "vue";
 import { usePokemonStore } from "../store";
 import PokemonPreview from "./PokemonPreview.vue";
+import { pokemonTypeColors, PokemonTypeColorsI } from "../pokemonTypeColors";
 
 const store = usePokemonStore();
 const prevBtnDisabled: Ref<boolean> = ref(true);
 const nextBtnDisabled: Ref<boolean> = ref(false);
+
+window.addEventListener("resize", () => console.log(window.innerWidth));
 
 if (store.currentPage === 1) {
   prevBtnDisabled.value = true;
@@ -13,7 +16,7 @@ if (store.currentPage === 1) {
   prevBtnDisabled.value = false;
 }
 
-if (!store.pokemons.length) {
+if (!store.pokemons.length || store.pokemons.length <= 1) {
   store.getPokemons(store.currentPage);
 }
 
@@ -41,9 +44,10 @@ function capitalizeFirstLetter(s: string): string {
 <template>
   <div class="search-results">
     <PokemonPreview
-      v-for="{ id, name, sprites } in store.pokemons"
+      v-for="{ id, name, sprites, types } in store.pokemons"
       :key="id"
       :name="name"
+      :pokemonColor="pokemonTypeColors[types.map((type) => type.type.name)[0]  as keyof PokemonTypeColorsI]"
       :imageSource="sprites.other['official-artwork']['front_default']"
     >
       <template #pokemon-number> #{{ id }} </template>
@@ -83,8 +87,7 @@ function capitalizeFirstLetter(s: string): string {
   &__prev,
   &__next {
     font-family: "Fira Code", monospace;
-    background-color: indianred;
-    // color: #f5f5f5;
+    background-color: #cbcbcb;
     color: #fff;
     font-size: 1.2rem;
     border: none;
@@ -92,17 +95,17 @@ function capitalizeFirstLetter(s: string): string {
     border-radius: 1rem;
     transition: all 0.2s ease-in-out;
 
-    @media (pointer: fine) {
-      filter: brightness(0.9);
-    }
+    // @media (pointer: fine) {
+    //   filter: brightness(0.9);
+    // }
 
     &:disabled {
-      background-color: #cea0a0;
+      background-color: #eeeeee;
     }
 
     &:hover:enabled {
       cursor: pointer;
-      filter: brightness(1);
+      background-color: #aaaaaa;
     }
   }
 }

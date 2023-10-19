@@ -1,10 +1,13 @@
 <script setup lang="ts">
-const props = defineProps(["imageSource", "name"]);
+const props = defineProps(["imageSource", "name", "pokemonColor"]);
 </script>
 
 <template>
   <router-link :to="`/pokemon/${name}`" class="router-link">
-    <div class="pokemon-preview">
+    <div
+      class="pokemon-preview"
+      :style="{ backgroundColor: `${pokemonColor}cc` }"
+    >
       <div class="pokemon-preview__number">
         <slot name="pokemon-number">000</slot>
       </div>
@@ -35,8 +38,7 @@ const props = defineProps(["imageSource", "name"]);
   position: relative;
   width: 100%;
   min-height: 200px;
-  color: #404040;
-  background-color: #9ad498;
+  color: #fff;
   border-radius: 1rem;
   padding: 0.5rem 0.5rem 0rem;
   position: relative;
@@ -45,18 +47,16 @@ const props = defineProps(["imageSource", "name"]);
   transform: translateZ(0);
   backface-visibility: hidden;
   transition: all 0.2s ease-in-out;
-  // background-image: url("../assets/pokemon-symbol-logo.png");
-  // background-position: bottom -3.5rem right -3rem;
-  // background-repeat: no-repeat;
-  // background-size: contain;
-  // background-blend-mode: luminosity;
+  background-image: url("../assets/poke-ball-logo.png");
+  background-position: bottom -3.5rem right -3rem;
+  background-repeat: no-repeat;
+  background-size: contain;
 
   @media (pointer: fine) {
     filter: brightness(0.9);
   }
 
   &:hover {
-    // scale: 1.02;
     filter: brightness(1);
 
     .pokemon-preview__img {
@@ -88,7 +88,7 @@ const props = defineProps(["imageSource", "name"]);
     right: 0.5rem;
     font-weight: 800;
     font-size: 1.5rem;
-    opacity: 0.2;
+    opacity: 0.3;
   }
 
   &__name {

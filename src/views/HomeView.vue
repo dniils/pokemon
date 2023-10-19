@@ -11,7 +11,6 @@ const SearchResults = defineAsyncComponent(
 <template>
   <div class="home-view-container">
     <SearchPokemon></SearchPokemon>
-    <!-- <SearchResults></SearchResults> -->
     <Suspense>
       <template #default>
         <SearchResults></SearchResults>

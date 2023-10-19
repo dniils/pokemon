@@ -47,7 +47,7 @@ function capitalizeFirstLetter(s: string): string {
 <template>
   <div
     class="pokemon-card-container"
-    :style="{ backgroundColor: `${pokemonColor}` }"
+    :style="{ backgroundColor: `${pokemonColor}cc` }"
   >
     <header class="header">
       <div class="header__buttons">
@@ -70,10 +70,14 @@ function capitalizeFirstLetter(s: string): string {
         <h2 class="header__number">#{{ pokemonToDisplay.id }}</h2>
       </div>
       <div class="header__types">
-        <span class="header__type" v-for="typeName in typeNames">{{
-          capitalizeFirstLetter(typeName)
-        }}</span>
+        <span
+          class="header__type"
+          v-for="typeName in typeNames"
+          :style="{backgroundColor: `${pokemonTypeColors[typeName as keyof PokemonTypeColorsI]}`}"
+          >{{ capitalizeFirstLetter(typeName) }}</span
+        >
       </div>
+      <div class="header__decore"></div>
     </header>
 
     <section class="info">
@@ -86,6 +90,13 @@ function capitalizeFirstLetter(s: string): string {
           :alt="`${pokemonToDisplay.name} pokemon image`"
         />
       </div>
+      <h3>About</h3>
+      <ul>
+        <li>Species: <span>some info</span></li>
+        <li>Gender: <span>info</span></li>
+        <li>Height: <span>123</span></li>
+        <li>Weight: <span>76</span></li>
+      </ul>
     </section>
   </div>
 </template>
@@ -94,11 +105,27 @@ function capitalizeFirstLetter(s: string): string {
 @import url("https://fonts.googleapis.com/css2?family=Fira+Code&display=swap");
 
 .header {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  padding: 1rem 10vw;
+  padding: 3rem 10vw 1rem;
   color: #fff;
+
+  &__decore {
+    position: absolute;
+    width: 10rem;
+    height: 10rem;
+    top: -5rem;
+    left: -4rem;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 1) 0%,
+      rgba(255, 255, 255, 0.04) 100%
+    );
+    border-radius: 1rem;
+    transform: rotate(70deg);
+  }
 
   &__buttons {
     display: flex;
@@ -106,15 +133,24 @@ function capitalizeFirstLetter(s: string): string {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
+    z-index: 2;
   }
 
   &__button {
     border: none;
     font-family: "Fira Code", monospace;
-    font-size: 1.5rem;
+    font-size: 2rem;
     background-color: transparent;
     cursor: pointer;
+  }
+
+  &__button-back {
+    transition: all 0.2s ease-in-out;
     color: #fff;
+
+    &:hover {
+      scale: 1.1;
+    }
   }
 
   &__button-like {
@@ -126,9 +162,10 @@ function capitalizeFirstLetter(s: string): string {
     justify-content: center;
     border-radius: 0 0 0 0.1rem;
     transform: rotate(-45deg);
+    margin-right: 0.4rem;
 
     &_active {
-      background-color: #000;
+      background-color: #28282e;
       animation: likeButtonAnimation 0.3s ease-in-out;
     }
 
@@ -173,20 +210,28 @@ function capitalizeFirstLetter(s: string): string {
     background-color: #ffffff2f;
     padding: 0 0.5rem;
     border-radius: 1rem;
+    border: 1px outset #ffffff5c;
   }
 }
 
 .info {
-  height: 500px; //
+  min-height: 500px; //
   background-color: #fff;
   border-radius: 2rem 2rem 0 0;
   margin-top: 10rem;
+  padding: 2rem 10vw;
 
   &__image-container {
-    transform: translateY(-80%);
+    position: absolute;
+    left: 0;
+    transform: translateY(-95%);
     width: 100%;
     display: flex;
     justify-content: center;
+    background-image: url("../assets/poke-ball-logo.png");
+    background-position: bottom -0.5rem right -3rem;
+    background-repeat: no-repeat;
+    background-size: contain;
   }
 
   &__image {
