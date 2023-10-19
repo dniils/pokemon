@@ -9,7 +9,7 @@ const routes = [
     component: HomeView,
   },
   {
-    path: "/pokemons/:id",
+    path: "/pokemon/:name",
     name: "Pokemon",
     component: PokemonView,
   },

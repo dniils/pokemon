@@ -1,9 +1,9 @@
 <script setup lang="ts">
-const props = defineProps(["imageSource", "id"]);
+const props = defineProps(["imageSource", "name"]);
 </script>
 
 <template>
-  <router-link :to="`/pokemons/${id}`" class="router-link">
+  <router-link :to="`/pokemon/${name}`" class="router-link">
     <div class="pokemon-preview">
       <div class="pokemon-preview__number">
         <slot name="pokemon-number">000</slot>

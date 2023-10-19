@@ -1,7 +1,20 @@
 <script setup lang="ts">
-import PokemonCard from "../components/PokemonCard.vue";
+import { defineAsyncComponent } from "vue";
+import LoadingSpinner from "../components/LoadingSpinner.vue";
+
+const PokemonCard = defineAsyncComponent(
+  () => import("../components/PokemonCard.vue")
+);
 </script>
 
 <template>
-  <PokemonCard></PokemonCard>
+  <Suspense>
+    <template #default>
+      <PokemonCard></PokemonCard>
+    </template>
+    <template #fallback>
+      <!-- put pokemon card skeleton here -->
+      <LoadingSpinner></LoadingSpinner>
+    </template>
+  </Suspense>
 </template>

@@ -13,12 +13,7 @@ export async function getPokemonsData(
       const pokemonResponse = await fetch(pokemon.url);
       const pokemonData = await pokemonResponse.json();
 
-      return {
-        url: pokemon.url,
-        id: pokemon.url.split("/")[6],
-        name: pokemonData.name,
-        image: pokemonData.sprites.other["official-artwork"]["front_default"],
-      };
+      return pokemonData;
     }
   );
 
@@ -26,10 +21,10 @@ export async function getPokemonsData(
   return pokemonDataArray;
 }
 
-export async function getPokemon(id: string): Promise<PokemonInterface> {
-  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}/`);
+export async function getPokemonData(name: string): Promise<PokemonInterface> {
+  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}/`);
   const data = await response.json();
 
-  console.log(data);
+  // console.log(data);
   return data;
 }

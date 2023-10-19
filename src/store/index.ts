@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, Ref } from "vue";
-import { getPokemonsData } from "../api/index.ts";
+import { getPokemonData, getPokemonsData } from "../api/index.ts";
 import { PokemonInterface } from "../types/pokemonInterface";
 
 export const usePokemonStore = defineStore("pokemons", () => {
@@ -21,5 +21,12 @@ export const usePokemonStore = defineStore("pokemons", () => {
     }
   }
 
-  return { pokemons, currentPage, getPokemons };
+  async function getPokemon(name: string): Promise<void> {
+    if (!pokemons.value.find((poke) => poke.name === name)) {
+      const pokemonData = await getPokemonData(name);
+      pokemons.value.push(pokemonData);
+    }
+  }
+
+  return { pokemons, currentPage, getPokemon, getPokemons };
 });

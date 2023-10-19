@@ -14,19 +14,19 @@ if (store.currentPage === 1) {
 }
 
 if (!store.pokemons.length) {
-  await store.getPokemons(store.currentPage);
+  store.getPokemons(store.currentPage);
 }
 
-async function goToPrevPage(): Promise<void> {
-  await store.getPokemons(--store.currentPage);
+function goToPrevPage(): void {
+  store.getPokemons(--store.currentPage);
 
   if (store.currentPage === 1) {
     prevBtnDisabled.value = true;
   }
 }
 
-async function goToNextPage(): Promise<void> {
-  await store.getPokemons(++store.currentPage);
+function goToNextPage(): void {
+  store.getPokemons(++store.currentPage);
 
   if (store.currentPage > 1) {
     prevBtnDisabled.value = false;
@@ -41,14 +41,14 @@ function capitalizeFirstLetter(s: string): string {
 <template>
   <div class="search-results">
     <PokemonPreview
-      v-for="pokemon in store.pokemons"
-      :key="pokemon.id"
-      :imageSource="pokemon.image"
-      :id="pokemon.id"
+      v-for="{ id, name, sprites } in store.pokemons"
+      :key="id"
+      :name="name"
+      :imageSource="sprites.other['official-artwork']['front_default']"
     >
-      <template #pokemon-number> #{{ pokemon.id }} </template>
+      <template #pokemon-number> #{{ id }} </template>
       <template #pokemon-name>
-        {{ capitalizeFirstLetter(pokemon.name) }}
+        {{ capitalizeFirstLetter(name) }}
       </template>
     </PokemonPreview>
   </div>
@@ -71,7 +71,7 @@ function capitalizeFirstLetter(s: string): string {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import url("https://fonts.googleapis.com/css2?family=Fira+Code&display=swap");
 
 .buttons {
