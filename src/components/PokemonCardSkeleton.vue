@@ -117,6 +117,7 @@
     align-items: center;
     justify-content: space-between;
     font-size: 1.5rem;
+    margin-bottom: 0.5rem;
   }
 
   &__title,

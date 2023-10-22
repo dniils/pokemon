@@ -27,6 +27,9 @@ const maxPokemonStat = Math.max(
   ...pokemonToDisplay.value.stats.map((stat) => stat.base_stat)
 );
 
+// If there is no stat higher than 100, let 100 be the maximum
+const maxStatValue = maxPokemonStat >= 100 ? maxPokemonStat : 100;
+
 function toggleLike(): void {
   if (isLikeActive.value) {
     isLikeActive.value = false;
@@ -102,7 +105,7 @@ function capitalizeFirstLetter(s: string): string {
           <span
             class="stat__filler"
             :style="{
-              width: `calc(100% - (${maxPokemonStat}% - ${stat.base_stat}%))`,
+              width: `${(stat.base_stat * 100) / maxStatValue}%`,
               backgroundColor: pokemonColor,
             }"
           ></span>
