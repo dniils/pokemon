@@ -9,6 +9,7 @@ const store = usePokemonStore();
 const searchInputValue = ref<string>('');
 const searchResults = ref<string[]>([]);
 const allPokemonNamesWithoutHyphens = ref<string[]>([]);
+const inputInFocus = ref<boolean>(false);
 
 onMounted(async () => {
   await store.getAllPokemonsNames();
@@ -20,26 +21,37 @@ onMounted(async () => {
 console.log(allPokemonNamesWithoutHyphens);
 
 function filterPokemonNames(): void {
+  inputInFocus.value = true;
+
   const processedInputValue = searchInputValue.value.trim().toLocaleLowerCase();
 
   if (processedInputValue) {
     searchResults.value = allPokemonNamesWithoutHyphens.value.filter((name) =>
       name.includes(processedInputValue)
     );
-    // .slice(0, 10);
   } else {
     searchResults.value = [];
   }
+}
+
+function hideSearchList(ms: number): void {
+  setTimeout(() => (inputInFocus.value = false), ms);
 }
 
 function submitEventHandler(e: Event): void {
   e.preventDefault();
   goToEnteredPokemon(searchInputValue.value);
 }
+
+function searchComponentStyleHandler() {
+  return inputInFocus.value
+    ? { 'box-shadow': '0 1px 6px 0 rgba(0, 0, 0, 0.25)' }
+    : {};
+}
 </script>
 
 <template>
-  <div class="search-pokemon">
+  <div class="search-pokemon" :style="searchComponentStyleHandler()">
     <form class="search-pokemon__form" @submit="submitEventHandler">
       <input
         type="text"
@@ -47,6 +59,9 @@ function submitEventHandler(e: Event): void {
         placeholder="start typing..."
         v-model="searchInputValue"
         @input="filterPokemonNames"
+        @focus="inputInFocus = true"
+        @blur="hideSearchList(150)"
+        @keyup.esc="hideSearchList(0)"
       />
       <button class="btn search-pokemon__btn">
         <img
@@ -56,7 +71,11 @@ function submitEventHandler(e: Event): void {
         />
       </button>
     </form>
-    <SearchList :inputValue="searchInputValue" :searchResults="searchResults" />
+    <SearchList
+      :inputValue="searchInputValue"
+      :searchResults="searchResults"
+      :inputInFocus="inputInFocus"
+    />
   </div>
 </template>
 
@@ -65,7 +84,7 @@ function submitEventHandler(e: Event): void {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: calc(375px - 6vw);
+  min-width: calc(320px - 6vw);
   margin: 0 auto;
   box-shadow: 0 1px 6px 0 rgb(0 0 0 / 14%);
   border-radius: 1rem;

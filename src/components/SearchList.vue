@@ -3,9 +3,10 @@ import router from '../router';
 import { goToEnteredPokemon } from '../utils/goToEnteredPokemon';
 import { replaceSpacesWithHyphens } from '../utils/replaceSpacesWithHyphens';
 
-const { inputValue, searchResults } = defineProps([
+const { inputValue, searchResults, inputInFocus } = defineProps([
   'inputValue',
   'searchResults',
+  'inputInFocus',
 ]);
 
 function goToSelectedPokemon(
@@ -23,12 +24,12 @@ function goToSelectedPokemon(
 </script>
 
 <template>
-  <ul class="search-list" v-if="inputValue.trim()">
+  <ul class="search-list" v-if="inputValue.trim() && inputInFocus">
     <li class="search-list__item" @click="goToEnteredPokemon(inputValue)">
       {{ inputValue }}
       <span class="search-list__label">- Search</span>
     </li>
-    <!-- check prop types? -->
+
     <li
       class="search-list__item"
       v-for="name in searchResults"
