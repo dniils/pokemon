@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const props = defineProps(["imageSource", "name", "pokemonColor"]);
+defineProps(['imageSource', 'name', 'pokemonColor']);
 </script>
 
 <template>
@@ -17,7 +17,7 @@ const props = defineProps(["imageSource", "name", "pokemonColor"]);
       <div class="pokemon-preview__content">
         <div>Lorem ipsum dolor sit amet.</div>
         <img
-          :src="props.imageSource"
+          :src="imageSource"
           class="pokemon-preview__img"
           alt="pokemon-image"
         />
@@ -47,7 +47,7 @@ const props = defineProps(["imageSource", "name", "pokemonColor"]);
   transform: translateZ(0);
   backface-visibility: hidden;
   transition: all 0.2s ease-in-out;
-  background-image: url("../assets/poke-ball-logo.png");
+  background-image: url('../assets/poke-ball-logo.png');
   background-position: bottom -3.5rem right -3rem;
   background-repeat: no-repeat;
   background-size: contain;

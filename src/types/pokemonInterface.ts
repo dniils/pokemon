@@ -1,7 +1,7 @@
 type Sprite = {
   front_default: string;
   other: {
-    "official-artwork": {
+    'official-artwork': {
       front_default: string;
       front_shiny: string;
     };
@@ -32,4 +32,9 @@ export interface PokemonInterface {
   sprites: Sprite;
   types: Type[];
   stats: Stat[];
+}
+
+export interface InitPokeInterface {
+  name: string;
+  url: string;
 }

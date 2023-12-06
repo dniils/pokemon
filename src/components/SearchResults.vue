@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { ref, Ref } from "vue";
-import { usePokemonStore } from "../store";
-import PokemonPreview from "./PokemonPreview.vue";
-import { pokemonTypeColors, PokemonTypeColorsI } from "../pokemonTypeColors";
+import { ref, Ref } from 'vue';
+import { usePokemonStore } from '../store';
+import PokemonPreview from './PokemonPreview.vue';
+import { pokemonTypeColors } from '../pokemonTypeColors';
+import { PokemonTypeColorsI } from '../types/pokemonTypeColors';
+import { capitalizeFirstLetterOfWords } from '../utils/capitalizeFirstLetterOfWords';
+import { replaceHyphensWithSpaces } from '../utils/replaceHyphensWithSpaces';
 
 const store = usePokemonStore();
 const prevBtnDisabled: Ref<boolean> = ref(true);
 const nextBtnDisabled: Ref<boolean> = ref(false);
 
-window.addEventListener("resize", () => console.log(window.innerWidth));
+// window.addEventListener('resize', () => console.log(window.innerWidth));
 
 if (store.currentPage === 1) {
   prevBtnDisabled.value = true;
@@ -22,7 +25,6 @@ if (!store.pokemons.length || store.pokemons.length <= 1) {
 
 function goToPrevPage(): void {
   store.getPokemons(--store.currentPage);
-  // router.push("/");
 
   if (store.currentPage === 1) {
     prevBtnDisabled.value = true;
@@ -31,15 +33,10 @@ function goToPrevPage(): void {
 
 function goToNextPage(): void {
   store.getPokemons(++store.currentPage);
-  // router.push("/");
 
   if (store.currentPage > 1) {
     prevBtnDisabled.value = false;
   }
-}
-
-function capitalizeFirstLetter(s: string): string {
-  return s[0].toUpperCase() + s.slice(1).toLowerCase();
 }
 </script>
 
@@ -50,11 +47,15 @@ function capitalizeFirstLetter(s: string): string {
       :key="id"
       :name="name"
       :pokemonColor="pokemonTypeColors[types.map((type) => type.type.name)[0]  as keyof PokemonTypeColorsI]"
-      :imageSource="sprites.other['official-artwork']['front_default']"
+      :imageSource="
+        sprites.other['official-artwork'].front_default ||
+        sprites.other['official-artwork'].front_shiny ||
+        sprites.front_default
+      "
     >
       <template #pokemon-number> #{{ id }} </template>
       <template #pokemon-name>
-        {{ capitalizeFirstLetter(name) }}
+        {{ capitalizeFirstLetterOfWords(replaceHyphensWithSpaces(name)) }}
       </template>
     </PokemonPreview>
   </div>
@@ -78,7 +79,7 @@ function capitalizeFirstLetter(s: string): string {
 </template>
 
 <style lang="scss" scoped>
-@import url("https://fonts.googleapis.com/css2?family=Fira+Code&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code&display=swap');
 
 .buttons {
   display: flex;
@@ -88,7 +89,7 @@ function capitalizeFirstLetter(s: string): string {
 
   &__prev,
   &__next {
-    font-family: "Fira Code", monospace;
+    font-family: 'Fira Code', monospace;
     background-color: #cbcbcb;
     color: #fff;
     font-size: 1.2rem;
@@ -115,7 +116,7 @@ function capitalizeFirstLetter(s: string): string {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1vw;
-  margin: 1rem 0;
+  margin: 3rem 0 1rem;
   transition: all 0.2s ease-in-out;
   -webkit-tap-highlight-color: transparent;
 

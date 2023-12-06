@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import { usePokemonStore } from "../store";
-import { useRoute } from "vue-router";
-import { PokemonInterface } from "../types/pokemonInterface";
-import { PokemonTypeColorsI, pokemonTypeColors } from "../pokemonTypeColors.ts";
-import router from "../router";
+import { ref } from 'vue';
+import { usePokemonStore } from '../store';
+import { useRoute } from 'vue-router';
+import { PokemonInterface } from '../types/pokemonInterface';
+import { pokemonTypeColors } from '../pokemonTypeColors.ts';
+import { PokemonTypeColorsI } from '../types/pokemonTypeColors';
+import { capitalizeFirstLetterOfWords } from '../utils/capitalizeFirstLetterOfWords';
+import { replaceHyphensWithSpaces } from '../utils/replaceHyphensWithSpaces';
 
 const route = useRoute();
 const store = usePokemonStore();
@@ -23,7 +25,7 @@ const typeNames: string[] = pokemonToDisplay.value.types.map(
 const pokemonColor: string =
   pokemonTypeColors[typeNames[0] as keyof PokemonTypeColorsI];
 
-const maxPokemonStat = Math.max(
+const maxPokemonStat: number = Math.max(
   ...pokemonToDisplay.value.stats.map((stat) => stat.base_stat)
 );
 
@@ -37,14 +39,6 @@ function toggleLike(): void {
     isLikeActive.value = true;
   }
 }
-
-function goToHomePage(): void {
-  router.push("/");
-}
-
-function capitalizeFirstLetter(s: string): string {
-  return s[0].toUpperCase() + s.slice(1).toLowerCase();
-}
 </script>
 
 <template>
@@ -54,12 +48,9 @@ function capitalizeFirstLetter(s: string): string {
   >
     <header class="header">
       <div class="header__buttons">
-        <button
-          class="header__button header__button-back"
-          @click="goToHomePage"
-        >
-          &lt;-
-        </button>
+        <router-link to="/">
+          <button class="header__button header__button-back">&lt;-</button>
+        </router-link>
         <button
           class="header__button header__button-like"
           :class="{ 'header__button-like_active': isLikeActive }"
@@ -68,7 +59,11 @@ function capitalizeFirstLetter(s: string): string {
       </div>
       <div class="header__title-and-number">
         <h2 class="header__title">
-          {{ capitalizeFirstLetter(pokemonToDisplay.name) }}
+          {{
+            capitalizeFirstLetterOfWords(
+              replaceHyphensWithSpaces(pokemonToDisplay.name)
+            )
+          }}
         </h2>
         <h2 class="header__number">#{{ pokemonToDisplay.id }}</h2>
       </div>
@@ -77,7 +72,7 @@ function capitalizeFirstLetter(s: string): string {
           class="header__type"
           v-for="typeName in typeNames"
           :style="{backgroundColor: `${pokemonTypeColors[typeName as keyof PokemonTypeColorsI]}`}"
-          >{{ capitalizeFirstLetter(typeName) }}</span
+          >{{ capitalizeFirstLetterOfWords(typeName) }}</span
         >
       </div>
       <div class="header__decore"></div>
@@ -95,28 +90,31 @@ function capitalizeFirstLetter(s: string): string {
       </div>
 
       <h3 class="info__stats-header">Stats</h3>
-      <div class="stat" v-for="stat in pokemonToDisplay.stats">
-        <div class="stat__name-and-base">
-          <span class="stat__name">{{ stat.stat.name }}</span>
-          <span class="stat__base"> {{ stat.base_stat }}</span>
-        </div>
 
-        <span class="stat__bar">
-          <span
-            class="stat__filler"
-            :style="{
-              width: `${(stat.base_stat * 100) / maxStatValue}%`,
-              backgroundColor: pokemonColor,
-            }"
-          ></span>
-        </span>
+      <div class="stats">
+        <div class="stats__item" v-for="stat in pokemonToDisplay.stats">
+          <div class="stats__name-and-base">
+            <span class="stats__name">{{ stat.stat.name }}</span>
+            <span class="stats__base"> {{ stat.base_stat }}</span>
+          </div>
+
+          <span class="stats__bar">
+            <span
+              class="stats__filler"
+              :style="{
+                width: `${(stat.base_stat * 100) / maxStatValue}%`,
+                backgroundColor: pokemonColor,
+              }"
+            ></span>
+          </span>
+        </div>
       </div>
     </section>
   </div>
 </template>
 
 <style lang="scss" scoped>
-@import url("https://fonts.googleapis.com/css2?family=Fira+Code&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code&display=swap');
 
 .header {
   position: relative;
@@ -152,7 +150,7 @@ function capitalizeFirstLetter(s: string): string {
 
   &__button {
     border: none;
-    font-family: "Fira Code", monospace;
+    font-family: 'Fira Code', monospace;
     font-size: 2rem;
     background-color: transparent;
     cursor: pointer;
@@ -185,7 +183,7 @@ function capitalizeFirstLetter(s: string): string {
 
     &::before {
       position: absolute;
-      content: "";
+      content: '';
       top: -50%;
       left: 0;
       width: 100%;
@@ -196,7 +194,7 @@ function capitalizeFirstLetter(s: string): string {
 
     &::after {
       position: absolute;
-      content: "";
+      content: '';
       top: 0;
       right: -50%;
       width: 100%;
@@ -242,7 +240,7 @@ function capitalizeFirstLetter(s: string): string {
     width: 100%;
     display: flex;
     justify-content: center;
-    background-image: url("../assets/poke-ball-logo.png");
+    background-image: url('../assets/poke-ball-logo.png');
     background-position: bottom -0.5rem right -3rem;
     background-repeat: no-repeat;
     background-size: contain;
@@ -253,13 +251,19 @@ function capitalizeFirstLetter(s: string): string {
   }
 }
 
-.stat {
+.stats {
   display: flex;
-  gap: 1rem;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0.5rem 0;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1rem 0;
+
+  &__item {
+    display: flex;
+    gap: 1rem;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
 
   &__name-and-base {
     min-width: 9rem;
@@ -267,24 +271,22 @@ function capitalizeFirstLetter(s: string): string {
     gap: 0.5rem;
     flex-direction: row;
     justify-content: space-between;
+    flex: 0;
   }
 
   &__name {
     color: gray;
     min-width: 7rem;
   }
-  &__base {
-    min-width: 1rem;
-  }
 
   &__bar {
     position: relative;
-    min-width: 6rem;
-    max-width: 10rem;
+    min-width: 5rem;
     width: 100%;
     height: 0.3rem;
     border-radius: 1rem;
     background-color: #e6e6e6;
+    flex: 1;
   }
 
   &__filler {

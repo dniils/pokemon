@@ -1,16 +1,16 @@
-import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
-import PokemonView from "../views/PokemonView.vue";
+import { createRouter, createWebHistory } from 'vue-router';
+import HomeView from '../views/HomeView.vue';
+import PokemonView from '../views/PokemonView.vue';
 
 const routes = [
   {
-    path: "/",
-    name: "Home",
+    path: '/',
+    name: 'Home',
     component: HomeView,
   },
   {
-    path: "/pokemon/:name",
-    name: "Pokemon",
+    path: '/pokemon/:name',
+    name: 'Pokemon',
     component: PokemonView,
   },
 ];

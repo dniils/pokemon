@@ -1,13 +1,53 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import { usePokemonStore } from '../store';
+import SearchList from './SearchList.vue';
+import { goToEnteredPokemon } from '../utils/goToEnteredPokemon';
+import { replaceHyphensWithSpaces } from '../utils/replaceHyphensWithSpaces';
+
+const store = usePokemonStore();
+const searchInputValue = ref<string>('');
+const searchResults = ref<string[]>([]);
+const allPokemonNamesWithoutHyphens = ref<string[]>([]);
+
+onMounted(async () => {
+  await store.getAllPokemonsNames();
+  allPokemonNamesWithoutHyphens.value = store.allPokemonsNames.map((name) =>
+    replaceHyphensWithSpaces(name)
+  );
+});
+
+console.log(allPokemonNamesWithoutHyphens);
+
+function filterPokemonNames(): void {
+  const processedInputValue = searchInputValue.value.trim().toLocaleLowerCase();
+
+  if (processedInputValue) {
+    searchResults.value = allPokemonNamesWithoutHyphens.value.filter((name) =>
+      name.includes(processedInputValue)
+    );
+    // .slice(0, 10);
+  } else {
+    searchResults.value = [];
+  }
+}
+
 function submitEventHandler(e: Event): void {
   e.preventDefault();
+  goToEnteredPokemon(searchInputValue.value);
 }
 </script>
 
 <template>
   <div class="search-pokemon">
     <form class="search-pokemon__form" @submit="submitEventHandler">
-      <input type="text" class="search-pokemon__input" />
+      <input
+        type="text"
+        class="search-pokemon__input"
+        placeholder="start typing..."
+        v-model="searchInputValue"
+        @input="filterPokemonNames"
+      />
       <button class="btn search-pokemon__btn">
         <img
           class="poke-ball-icon"
@@ -16,28 +56,40 @@ function submitEventHandler(e: Event): void {
         />
       </button>
     </form>
+    <SearchList :inputValue="searchInputValue" :searchResults="searchResults" />
   </div>
 </template>
 
 <style scoped lang="scss">
 .search-pokemon {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 2rem;
+  min-width: calc(375px - 6vw);
+  margin: 0 auto;
+  box-shadow: 0 1px 6px 0 rgb(0 0 0 / 14%);
+  border-radius: 1rem;
+  position: absolute;
+  transform: translateX(-50%);
+  left: 50%;
+  overflow: hidden;
+  z-index: 1;
 
-  margin-bottom: 1rem;
+  @media screen and (min-width: 769px) {
+    min-width: unset;
+    width: 25rem;
+  }
+
+  &:hover {
+    box-shadow: 0 1px 6px 0 rgb(0 0 0 / 25%);
+  }
 
   &__form {
-    width: 100%;
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+    width: 100%;
+    height: 2rem;
+    min-height: 2rem;
     background-color: #fff;
-    height: 100%;
-    border: 1px solid gray;
-    border-radius: 1rem;
   }
 
   &__input {

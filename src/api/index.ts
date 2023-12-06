@@ -1,5 +1,14 @@
-import { PokemonInterface } from "../types/pokemonInterface";
-import { ref } from "vue";
+import { PokemonInterface } from '../types/pokemonInterface';
+import { ref } from 'vue';
+
+export async function getAllPokemonsData() {
+  const LIMIT = 10000;
+  const response = await fetch(
+    `https://pokeapi.co/api/v2/pokemon?limit=${LIMIT}`
+  );
+  const data = await response.json();
+  return data;
+}
 
 export async function getPokemonsData(
   page: number
